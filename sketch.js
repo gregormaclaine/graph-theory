@@ -1,18 +1,21 @@
-let graph = generateGraph(6, 9);
-let diagram = new GraphVisual(graph);
+let graph;
+let diagram;
 
-console.log(graph.nodes);
-console.log(graph.edges);
+function refresh() {
+  graph = Graph.fromRandom(5, 5);
+  diagram = new GraphVisual(graph).shuffle(width, height);
+
+  const cycle = graph.findLongestCycle();
+  cycle.forEach(e => e.highlighted = true);
+}
 
 function mousePressed() {
-  graph = generateGraph(6, Infinity);
-  diagram = new GraphVisual(graph);
-  diagram.shuffle(width, height);
+  refresh();
 }
 
 function setup() {
   createCanvas(800, 600);
-  diagram.shuffle(width, height);
+  refresh();
 }
 
 function draw() {

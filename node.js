@@ -1,8 +1,9 @@
 class Node {
-  constructor() {
-    this.id = Node.generateID();
+  constructor(id) {
+    this.id = id || Node.generateID();
     this.x = 0;
     this.y = 0;
+    this.highlighted = false;
   }
 
   static generateID() {
@@ -20,8 +21,13 @@ class Node {
   toString = () => `<Node ${this.id}>`;
 
   render() {
-    fill(0);
+    this.highlighted ? fill(255, 0, 0) : fill(0);
     strokeWeight(0);
-    ellipse(this.x, this.y, 20, 20);
+    ellipse(this.x, this.y, 16, 16);
+    strokeWeight(1);
+    stroke(0);
+    textSize(15);
+    textAlign(CENTER, CENTER); 
+    text(this.id, this.x, this.y - 25);
   }
 }
