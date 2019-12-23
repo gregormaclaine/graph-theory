@@ -5,7 +5,7 @@ function _findCyclesFromVertex(graph, visited, currentPath, v) {
     if (visited[0] === w) {
       cycles.push(currentPath.concat([ edge ]));
     } else if (!visited.includes(w)) {
-      cycles.push(..._findCyclesFromVertex(graph, visited.concat(v), currentPath.concat([ edge ]), w));
+      cycles.push(..._findCyclesFromVertex(graph, visited.concat([ v ]), currentPath.concat([ edge ]), w));
     }
   }
   return cycles;
