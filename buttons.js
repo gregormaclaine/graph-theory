@@ -16,7 +16,7 @@ function create_buttons(graph) {
 		if (data.inputs) Object.entries(data.inputs).forEach(([name, default_value]) => {
 			const input_container = createSpan().parent(container);
 			createSpan(name + ':').parent(input_container)
-			inputEls[name] = createInput(default_value).parent(input_container)
+			inputEls[name] = createInput(default_value.toString()).parent(input_container)
 		});
 
 		button.mousePressed(() => {
