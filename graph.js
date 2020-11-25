@@ -1,55 +1,57 @@
-function _findCyclesFromVertex(graph, visited, currentPath, v) {
-  const cycles = [];
-  for (const w of graph.getAdjacentNodes(v)) {
-    const edge = graph.edges.find(e => e.has(v, w));
-    if (visited[0] === w) {
-      cycles.push(currentPath.concat([ edge ]));
-    } else if (!visited.includes(w)) {
-      cycles.push(..._findCyclesFromVertex(graph, visited.concat([ v ]), currentPath.concat([ edge ]), w));
-    }
-  }
-  return cycles;
-}
-
 class Graph {
-  constructor({ nodes, edges }) {
-    this.nodes = nodes;
-    this.edges = edges;
-  }
+	constructor() {
+		this.verticies = [];
+		this.edges = [];
+		this.selected = null;
+	}
 
-  static fromRandom(order, size) {
-    size = min(size, (order * (order - 1)) / 2);
-    size = max(size, order - 1)
+	randomise(order, size) {
+		order = parseInt(order);
+		size = parseInt(size)
+		if (isNaN(order) || isNaN(size)) return console.log('Caught Error: Graph.randomise(...) took non-number arguments');
 
-    const nodes = new Array(order).fill(0).map(() => new Node());
-    const edges = nodes.map((n, i, arr) => i === 0 ? null : new Edge(n, arr[i - 1])).slice(1);
-    const complete_edges = [];
+		this.verticies = Array(order).fill(0).map((x, i) => new Vertex(i));
 
-    for (const baseNode of nodes) {
-      const edgesFromBaseNode = nodes.map(secondaryNode => {
-        return secondaryNode !== baseNode ? new Edge(baseNode, secondaryNode) : null;
-      }).filter(e => e);
+		const edges = [];
 
-      const uniqueEdges = edgesFromBaseNode.filter(edge => !complete_edges.find(edge2 => edge.equals(edge2)));
-      const newEdges = uniqueEdges.filter(edge => !edges.find(edge2 => edge.equals(edge2)));
-      complete_edges.push(...newEdges);
-    }
+		for (let i = 1; i < order; i++) {
+			const r = floor(random() * 2) // 0 or 1
+			const e = new Edge(this.verticies[i - r], this.verticies[i - (1 - r)]);
+			edges.push(e);
+		}
 
-    for (let i = 0; i < size - order + 1; i++) 
-      edges.push(complete_edges.splice(floor(random(complete_edges.length)), 1)[0]);
+		const possible_edges = [];
+		for (const u of this.verticies) {
+			for (const v of this.verticies) {
+				if (u !== v) possible_edges.push(new Edge(u, v));
+			}
+		}
+		const other_edges = possible_edges.filter(edge => edges.every(e => !e.equals(edge)));
 
-    return new Graph({ nodes, edges });
-  }
+		for (let i = 0; i < size - order + 1 && other_edges.length > 0; i++) {
+			const index = floor(other_edges.length * random());
+			edges.push(...other_edges.splice(index, 1));
+		}
 
-  getAdjacentNodes(node) {
-    if (!this.nodes.includes(node)) return [];
-    const edges = this.edges.filter(e => e.node1 === node || e.node2 === node);
-    return edges.map(e => e.node1 === node ? e.node2 : e.node1);
-  }
+		this.edges = edges;
+		return this;
+	}
 
-  findLongestCycle() {
-    const cycles = [];
-    for (const v of this.nodes) cycles.push(..._findCyclesFromVertex(this, [], [], v));
-    return cycles.reduce((max, current) => max.length > current.length ? max : current, []);
-  }
+	handle_click(point) {
+		for (const u of this.verticies) {
+			if (u.contains(point)) this.selected = this.selected === u ? null : u;
+		}
+	}
+
+	show() {
+		for (const u of this.verticies) u.show({ selected: u === this.selected });
+	}
+
+	format_verticies_in_circle() {
+		for (let i = 0, u = this.verticies[i]; i < this.verticies.length; u = this.verticies[++i]) {
+			const x = cos(TAU / this.verticies.length * i - HALF_PI) * 300;
+			const y = sin(TAU / this.verticies.length * i - HALF_PI) * 300;
+			u.pos = createVector(x, y);
+		}
+	}
 }

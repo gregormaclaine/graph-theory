@@ -4,13 +4,14 @@
   <title>Graph Theory</title>
   <script src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.js"></script>
 
-  <!-- <script src="p5.js"></script> -->
+	<!-- <script src="p5.js"></script> -->
 
-  <script src="node.js"></script>
-  <script src="edge.js"></script>
-  <script src="graph.js"></script>
-
-  <script src="displayGraph.js"></script>
+	<script src="helpers.js"></script>
+	<script src="buttons.js"></script>
+	
+	<script src="Vertex.js"></script>
+	<script src="Edge.js"></script>
+	<script src="Graph.js"></script>
   
   <script src="sketch.js"></script>
 
@@ -19,14 +20,40 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      flex-direction: column;
     }
+
+		#buttons {
+			margin-left: 15px;
+			height: 800px;
+			width: 200px;
+			display: flex;
+			flex-direction: column;
+			align-items: stretch;
+		}
+
+		#buttons > div {
+			margin-bottom: 10px;
+			display: flex;
+			align-items: stretch;
+			flex-direction: column;
+		}
+
+		#buttons > div > span {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+
+		#buttons > div > span > input {
+			width: 60%;
+		}
   </style>
 
 </head>
 
 <body>
-
+	<div id='visual'></div>
+	<div id='buttons'></div>
 </body>
 
 </html>
