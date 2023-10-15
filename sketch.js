@@ -17,3 +17,5 @@ function draw() {
 	background(240);
 	graph.show();
 }
+
+console.log('Hello from Steli');
